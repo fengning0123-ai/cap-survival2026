@@ -50,7 +50,7 @@ function updateStat(subject, change) {
 const bosses = [
     { 
         name: "【E級 巨石神像】", 
-        imgSrc: "https://fengning0123-ai.github.io/cap-survival2026/image/boss-1.jpg",
+        imgSrc: "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/boss-1.jpg?raw=true",
         desc: "「連基本積分都沒有，休想跨過這扇門！」",
         check: (stats) => {
             let totalPts = 0;
@@ -61,7 +61,7 @@ const bosses = [
     },
     { 
         name: "【A級 血色騎士】", 
-        imgSrc: "https://fengning0123-ai.github.io/cap-survival2026/image/boss-2.jpg",
+        imgSrc: "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/boss-2.jpg?raw=true",
         desc: "「同分的情況下，只有強者才能生存。」",
         check: (stats) => {
             let totalPlus = 0;
@@ -72,7 +72,7 @@ const bosses = [
     },
     { 
         name: "【S級 闇影蟻王】", 
-        imgSrc: "https://fengning0123-ai.github.io/cap-survival2026/image/boss-3.jpg",
+        imgSrc: "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/boss-3.jpg?raw=true",
         desc: "「啟動桃連區法則，鎖定國文與數學防禦力...」",
         check: (stats) => {
             let chn = gradesData[stats["國文"]].level;
@@ -132,7 +132,7 @@ async function startDungeon() {
     document.getElementById('battle-title').classList.add('text-sys-blue');
     
     // 通關勝利圖片也換成你的專屬路徑了
-    bossImg.src = "https://fengning0123-ai.github.io/cap-survival2026/image/victory.jpg"; 
+    bossImg.src = "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/victory.jpg?raw=true"; 
     
     logBox.innerHTML += `<div class='text-sys-blue font-bold text-lg mt-4 blink'>[系統] 恭喜！您已通關升學地下城，獲得高中入學資格！</div>`;
     logBox.scrollTop = logBox.scrollHeight;
