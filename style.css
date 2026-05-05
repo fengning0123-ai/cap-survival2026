@@ -1,0 +1,32 @@
+body { 
+    /* 你的專屬背景圖 */
+    background-image: url('https://fengning0123-ai.github.io/cap-survival2026/images/bg-system.jpg'); 
+    background-color: #0b0c10;
+    background-size: cover; 
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+/* 隱藏捲軸但保持可滾動 */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* 掃描線特效 */
+.scan-line {
+    width: 100%; height: 2px; background: #45f3ff;
+    position: absolute; top: 0; left: 0; opacity: 0.5;
+    animation: scan 3s linear infinite;
+}
+@keyframes scan { 
+    0% { top: 0; } 
+    100% { top: 100%; } 
+}
+
+/* 閃爍特效 */
+.blink { animation: blinker 1s linear infinite; }
+@keyframes blinker { 50% { opacity: 0; } }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>比序闖關G</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!-- 引入 Tailwind CSS 與 字體 -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Noto Sans TC', 'sans-serif'],
+                    system: ['Orbitron', 'sans-serif'],
+                },
+                colors: {
+                    'sys-dark': '#0b0c10',
+                    'sys-panel': 'rgba(17, 24, 39, 0.85)',
+                    'sys-blue': '#45f3ff',
+                    'sys-red': '#ff2a2a',
+                },
+                boxShadow: {
+                    'neon': '0 0 15px rgba(69, 243, 255, 0.5)',
+                    'neon-red': '0 0 15px rgba(255, 42, 42, 0.5)',
+                }
+            }
+        }
+    }
+</script>
+
+<div class="scan-line pointer-events-none z-50"></div>
+
+<!-- 遊戲主容器 -->
+<div id="game-container" class="w-full max-w-md bg-sys-panel border-2 border-sys-blue rounded-lg shadow-neon p-6 relative z-10">
+    
+    <!-- 畫面 1：系統覺醒與 QR Code -->
+    <div id="screen-intro" class="block text-center transition-opacity duration-500">
+        <h1 class="text-sys-blue font-system text-2xl font-bold border-b border-sys-blue pb-2 mb-4 drop-shadow-[0_0_5px_#45f3ff]">【系統提示】</h1>
+        <p class="mb-2 text-lg text-gray-300">您已獲得玩家資格。</p>
+        <p class="mb-4 text-sm text-gray-400">任務：突破【桃連區升學地下城】</p>
+        
+        <div class="bg-white p-2 rounded-lg inline-block mb-6">
+            <!-- 已經幫你設定好，掃描會直接連到你的 GitHub Pages -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://fengning0123-ai.github.io/cap-survival2026/" alt="QR Code" class="w-32 h-32 mx-auto">
+        </div>
+        <p class="text-xs text-sys-blue mb-4 font-system">SCAN TO WAKE UP</p>
+        
+        <button onclick="switchScreen('screen-stats')" class="w-full py-3 border border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 font-bold rounded">
+            接受任務 (覺醒)
+        </button>
+    </div>
+
+    <!-- 畫面 2：狀態配置視窗 -->
+    <div id="screen-stats" class="hidden text-center transition-opacity duration-500">
+        <h2 class="text-sys-blue font-system text-xl font-bold mb-2">STATUS WINDOW</h2>
+        <p class="mb-4 text-sm text-gray-300">剩餘學習點數 (AP)：<span id="ap-points" class="text-sys-blue font-bold text-xl drop-shadow-[0_0_5px_#45f3ff]">15</span></p>
+        
+        <div id="stats-container" class="space-y-3 text-left mb-6 text-gray-300">
+            <!-- JS 動態生成學科 -->
+        </div>
+
+        <button onclick="startDungeon()" id="btn-enter" class="w-full py-3 border border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 font-bold rounded disabled:opacity-50 disabled:cursor-not-allowed">
+            進入地下城
+        </button>
+    </div>
+
+    <!-- 畫面 3：戰鬥結算 -->
+    <div id="screen-battle" class="hidden transition-opacity duration-500">
+        <h2 id="battle-title" class="text-sys-red font-system text-xl font-bold mb-4 text-center drop-shadow-[0_0_5px_#ff2a2a] blink">⚠ 檢測到魔王氣息 ⚠</h2>
+        
+        <div id="boss-image-container" class="mb-4 hidden">
+            <img id="boss-image" src="" alt="Boss" class="w-full h-48 object-cover rounded border border-gray-600 shadow-md">
+        </div>
+
+        <div id="battle-log" class="bg-black border border-gray-600 h-48 overflow-y-auto no-scrollbar p-3 text-sm font-mono space-y-2 mb-4 rounded text-gray-300">
+            <!-- 戰鬥文字轉播 -->
+        </div>
+        
+        <button onclick="location.reload()" class="w-full py-3 border border-gray-400 text-gray-300 hover:bg-gray-800 transition-all duration-300 font-bold rounded hidden" id="btn-restart">
+            重新挑戰 (復活)
+        </button>
+    </div>
+</div>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
