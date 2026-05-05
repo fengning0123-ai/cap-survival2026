@@ -26,13 +26,14 @@ function renderStats() {
         let currentGrade = gradesData[lvlIdx];
         let colorClass = currentGrade.level.includes('A') ? 'text-sys-blue' : (currentGrade.level.includes('C') ? 'text-gray-500' : 'text-white');
 
+        // 在此處加大了科目字體 (text-xl md:text-3xl) 以及觸控按鈕 (w-14 h-14 md:w-16 md:h-16)
         container.innerHTML += `
-            <div class="flex justify-between items-center bg-gray-800 p-2 rounded">
-                <span class="font-bold w-16">${subject}</span>
-                <span class="w-12 text-center font-bold font-system ${colorClass} drop-shadow-[0_0_2px_currentColor]">${currentGrade.level}</span>
-                <div class="space-x-2">
-                    <button onclick="updateStat('${subject}', -1)" class="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded text-white font-bold disabled:opacity-30" ${lvlIdx === 0 ? 'disabled' : ''}>-</button>
-                    <button onclick="updateStat('${subject}', 1)" class="w-8 h-8 border border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark rounded font-bold disabled:opacity-30 disabled:border-gray-600 disabled:text-gray-600" ${lvlIdx === 6 || apPoints === 0 ? 'disabled' : ''}>+</button>
+            <div class="flex justify-between items-center bg-gray-800 p-3 md:p-4 rounded-lg shadow-md border border-gray-700">
+                <span class="font-black text-xl md:text-3xl w-20 md:w-28 tracking-widest">${subject}</span>
+                <span class="w-16 md:w-24 text-center font-black font-system text-2xl md:text-4xl ${colorClass} drop-shadow-[0_0_3px_currentColor]">${currentGrade.level}</span>
+                <div class="space-x-3 md:space-x-4">
+                    <button onclick="updateStat('${subject}', -1)" class="w-12 h-12 md:w-16 md:h-16 text-2xl md:text-3xl bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-black disabled:opacity-30 transition-colors" ${lvlIdx === 0 ? 'disabled' : ''}>-</button>
+                    <button onclick="updateStat('${subject}', 1)" class="w-12 h-12 md:w-16 md:h-16 text-2xl md:text-3xl border-2 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark rounded-lg font-black disabled:opacity-30 disabled:border-gray-600 disabled:text-gray-600 transition-colors" ${lvlIdx === 6 || apPoints === 0 ? 'disabled' : ''}>+</button>
                 </div>
             </div>
         `;
@@ -46,7 +47,6 @@ function updateStat(subject, change) {
     renderStats();
 }
 
-// 已經替換為你的專屬圖片網址
 const bosses = [
     { 
         name: "【E級 巨石神像】", 
@@ -92,7 +92,7 @@ async function startDungeon() {
     const imgContainer = document.getElementById('boss-image-container');
     const bossImg = document.getElementById('boss-image');
     
-    logBox.innerHTML = "<div class='text-sys-blue mb-2'>[系統] 正在建立地下城連結...</div>";
+    logBox.innerHTML = "<div class='text-sys-blue mb-3'>[系統] 正在建立地下城連結...</div>";
     await delay(1000);
     
     imgContainer.classList.remove('hidden');
@@ -101,8 +101,8 @@ async function startDungeon() {
         let boss = bosses[i];
         bossImg.src = boss.imgSrc; 
         
-        logBox.innerHTML += `<div class='text-sys-red mt-3'>➤ 遭遇 ${boss.name}</div>`;
-        logBox.innerHTML += `<div class='text-gray-400 italic'>${boss.desc}</div>`;
+        logBox.innerHTML += `<div class='text-sys-red mt-5 text-xl md:text-3xl font-black'>➤ 遭遇 ${boss.name}</div>`;
+        logBox.innerHTML += `<div class='text-yellow-200 italic mb-2'>${boss.desc}</div>`;
         logBox.scrollTop = logBox.scrollHeight;
         await delay(1500);
 
@@ -113,12 +113,12 @@ async function startDungeon() {
         let result = boss.check(playerStats);
         
         if (result.pass) {
-            logBox.innerHTML += `<div class='text-sys-blue'>[成功] 判定結果 (${result.detail})。擊破 ${boss.name}！</div>`;
+            logBox.innerHTML += `<div class='text-sys-blue text-xl md:text-2xl'>[成功] 判定結果 (${result.detail})。擊破 ${boss.name}！</div><hr class="border-gray-600 my-4">`;
         } else {
             document.getElementById('battle-title').innerText = "💀 GAME OVER 💀";
-            logBox.innerHTML += `<div class='text-sys-red font-bold'>[失敗] 判定結果 (${result.detail})。</div>`;
-            logBox.innerHTML += `<div class='text-yellow-400 mt-2 whitespace-pre-line'>${boss.failMsg}</div>`;
-            logBox.innerHTML += `<div class='text-gray-500 mt-4'>[系統] 玩家已死亡。測驗結束。</div>`;
+            logBox.innerHTML += `<div class='text-sys-red font-black text-xl md:text-3xl'>[失敗] 判定結果 (${result.detail})。</div>`;
+            logBox.innerHTML += `<div class='text-yellow-400 mt-3 whitespace-pre-line text-lg md:text-2xl'>${boss.failMsg}</div>`;
+            logBox.innerHTML += `<div class='text-gray-500 mt-6 font-bold'>[系統] 玩家已死亡。測驗結束。</div>`;
             logBox.scrollTop = logBox.scrollHeight;
             document.getElementById('btn-restart').classList.remove('hidden');
             return; 
@@ -129,12 +129,11 @@ async function startDungeon() {
 
     document.getElementById('battle-title').innerText = "✨ LEVEL UP ✨";
     document.getElementById('battle-title').classList.remove('text-sys-red');
-    document.getElementById('battle-title').classList.add('text-sys-blue');
+    document.getElementById('battle-title').classList.add('text-sys-blue', 'drop-shadow-[0_0_8px_#45f3ff]');
     
-    // 通關勝利圖片也換成你的專屬路徑了
     bossImg.src = "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/victory.jpg?raw=true"; 
     
-    logBox.innerHTML += `<div class='text-sys-blue font-bold text-lg mt-4 blink'>[系統] 恭喜！您已通關升學地下城，獲得高中入學資格！</div>`;
+    logBox.innerHTML += `<div class='text-sys-blue font-black text-2xl md:text-4xl mt-6 blink drop-shadow-[0_0_5px_#45f3ff]'>[系統] 恭喜！您已通關升學地下城，獲得高中入學資格！</div>`;
     logBox.scrollTop = logBox.scrollHeight;
     document.getElementById('btn-restart').classList.remove('hidden');
 }
