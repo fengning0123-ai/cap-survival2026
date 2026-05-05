@@ -22,7 +22,7 @@
                 },
                 colors: {
                     'sys-dark': '#0b0c10',
-                    'sys-panel': 'rgba(17, 24, 39, 0.90)', /* 加深背景不透明度抗光 */
+                    'sys-panel': 'rgba(17, 24, 39, 0.90)',
                     'sys-blue': '#45f3ff',
                     'sys-red': '#ff2a2a',
                 },
@@ -35,41 +35,40 @@
     }
 </script>
 
-<div class="scan-line pointer-events-none z-50"></div>
+<div id="scan-line-fx" class="scan-line pointer-events-none z-50"></div>
 
-<!-- 遊戲主容器：加寬至 max-w-2xl，讓投影幕更好看 -->
-<div id="game-container" class="w-11/12 max-w-2xl bg-sys-panel border-4 border-sys-blue rounded-xl shadow-neon p-6 md:p-10 relative z-10">
+<!-- 遊戲主容器 -->
+<div id="game-container" class="w-11/12 max-w-2xl bg-sys-panel border-4 border-sys-blue rounded-xl shadow-neon p-6 md:p-10 relative z-10 transition-all duration-500">
     
-    <!-- 畫面 1：系統覺醒與 QR Code -->
+    <!-- 畫面 1：系統覺醒 -->
     <div id="screen-intro" class="block text-center transition-opacity duration-500">
-        <!-- 標題放大，投影機專用尺寸 md:text-5xl -->
         <h1 class="text-sys-blue font-system text-3xl md:text-5xl font-black border-b-2 border-sys-blue pb-4 mb-6 drop-shadow-[0_0_8px_#45f3ff]">【系統提示】</h1>
         <p class="mb-4 text-xl md:text-3xl text-gray-100 font-bold tracking-wider">您已獲得玩家資格。</p>
         <p class="mb-6 text-lg md:text-2xl text-yellow-400 font-bold">任務：突破【桃連區升學地下城】</p>
         
-        <div class="bg-white p-3 rounded-xl inline-block mb-8">
-            <!-- QR Code 放大 -->
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://fengning0123-ai.github.io/cap-survival2026/" alt="QR Code" class="w-40 h-40 md:w-56 md:h-56 mx-auto">
+        <div class="bg-gray-800 p-4 md:p-6 rounded-xl inline-block mb-6 w-full max-w-sm border-2 border-gray-600 shadow-inner">
+            <label for="player-name-input" class="block text-sys-blue text-lg md:text-2xl font-bold mb-3">請輸入獵人 ID</label>
+            <input type="text" id="player-name-input" placeholder="例如：暗影君王" class="w-full bg-black border-2 border-sys-blue text-white font-system text-xl md:text-2xl p-3 rounded-lg text-center focus:outline-none focus:shadow-neon focus:border-sys-blue transition-all" autocomplete="off">
         </div>
-        <p class="text-lg md:text-2xl text-sys-blue mb-6 font-system font-bold tracking-widest">SCAN TO WAKE UP</p>
+        <p class="text-lg md:text-2xl text-sys-blue mb-6 font-system font-bold tracking-widest">ENTER NAME TO WAKE UP</p>
         
-        <!-- 按鈕變肥大，好按 -->
-        <button onclick="switchScreen('screen-stats')" class="w-full py-4 md:py-6 text-xl md:text-3xl border-2 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 font-black rounded-lg shadow-[0_0_10px_#45f3ff]">
+        <button onclick="startGame()" class="w-full py-4 md:py-6 text-xl md:text-3xl border-2 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 font-black rounded-lg shadow-[0_0_10px_#45f3ff]">
             接受任務 (覺醒)
         </button>
     </div>
 
-    <!-- 畫面 2：狀態配置視窗 -->
+    <!-- 畫面 2：狀態配置 -->
     <div id="screen-stats" class="hidden text-center transition-opacity duration-500">
         <h2 class="text-sys-blue font-system text-2xl md:text-4xl font-black mb-4 drop-shadow-[0_0_5px_#45f3ff]">STATUS WINDOW</h2>
-        <p class="mb-6 text-xl md:text-3xl text-gray-100 font-bold">剩餘學習點數：<span id="ap-points" class="text-sys-blue font-black text-3xl md:text-5xl drop-shadow-[0_0_8px_#45f3ff] ml-2">15</span></p>
+        <p class="mb-6 text-xl md:text-3xl text-gray-100 font-bold bg-gray-800 p-3 rounded-lg border border-sys-blue inline-block shadow-neon">
+            剩餘學習點數：<span id="ap-points" class="text-sys-blue font-black text-3xl md:text-5xl drop-shadow-[0_0_8px_#45f3ff] ml-2">15</span>
+        </p>
         
-        <!-- 動態生成學科區塊 -->
         <div id="stats-container" class="space-y-4 text-left mb-8 text-gray-100">
-            <!-- JS 產生 -->
+            <!-- JS 動態生成配點介面 -->
         </div>
 
-        <button onclick="startDungeon()" id="btn-enter" class="w-full py-4 md:py-6 text-xl md:text-3xl border-2 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 font-black rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+        <button onclick="startDungeon()" id="btn-enter" class="w-full py-4 md:py-6 text-xl md:text-3xl border-4 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 font-black rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(69,243,255,0.4)]">
             進入地下城
         </button>
     </div>
@@ -79,17 +78,33 @@
         <h2 id="battle-title" class="text-sys-red font-system text-2xl md:text-4xl font-black mb-6 text-center drop-shadow-[0_0_8px_#ff2a2a] blink">⚠ 檢測到魔王氣息 ⚠</h2>
         
         <div id="boss-image-container" class="mb-6 hidden">
-            <!-- 圖片在投影幕上也會變大 -->
             <img id="boss-image" src="" alt="Boss" class="w-full h-56 md:h-80 object-cover rounded-lg border-2 border-gray-500 shadow-lg">
         </div>
 
-        <!-- 戰鬥文字區塊放大、加高 -->
-        <div id="battle-log" class="bg-black border-2 border-gray-500 h-64 md:h-96 overflow-y-auto no-scrollbar p-4 md:p-6 text-lg md:text-2xl font-bold space-y-4 mb-6 rounded-lg text-gray-100 leading-relaxed tracking-wide shadow-inner">
+        <div id="battle-log" class="bg-black border-2 border-gray-500 h-64 md:h-[28rem] overflow-y-auto no-scrollbar p-4 md:p-6 text-lg md:text-2xl font-bold space-y-4 mb-6 rounded-lg text-gray-100 leading-relaxed tracking-wide shadow-inner">
             <!-- 戰鬥文字轉播 -->
         </div>
         
-        <button onclick="location.reload()" class="w-full py-4 md:py-6 border-2 border-gray-400 text-gray-100 hover:bg-gray-800 transition-all duration-300 text-xl md:text-3xl font-black rounded-lg hidden" id="btn-restart">
-            重新挑戰 (復活)
+        <div class="flex flex-col md:flex-row gap-4 hidden w-full" id="end-buttons">
+            <button onclick="showReview()" class="flex-1 py-4 md:py-5 border-4 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-sys-dark transition-all duration-300 text-xl md:text-2xl font-black rounded-lg shadow-[0_0_15px_rgba(250,204,21,0.5)]">
+                📊 查看覆盤分析
+            </button>
+            <button id="battle-btn-restart" onclick="resetGame()" class="flex-1 py-4 md:py-5 border-2 border-gray-400 text-gray-100 hover:bg-gray-800 transition-all duration-300 text-xl md:text-2xl font-black rounded-lg">
+                🔄 重新挑戰
+            </button>
+        </div>
+    </div>
+
+    <!-- 畫面 4：覆盤分析 -->
+    <div id="screen-review" class="hidden transition-opacity duration-500">
+        <h2 class="text-yellow-400 font-system text-3xl md:text-5xl font-black mb-6 text-center drop-shadow-[0_0_8px_#facc15]">【戰報覆盤分析】</h2>
+        
+        <div id="review-content" class="h-auto max-h-[45rem] overflow-y-auto no-scrollbar mb-6 p-2 space-y-6">
+            <!-- JS 動態生成覆盤內容 -->
+        </div>
+
+        <button id="btn-review-restart" onclick="resetGame()" class="w-full py-4 md:py-6 border-2 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 text-2xl md:text-3xl font-black rounded-lg hidden">
+            🔄 重新配置點數 (再戰)
         </button>
     </div>
 </div>

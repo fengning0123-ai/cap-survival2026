@@ -26,3 +26,7 @@ body {
 
 .blink { animation: blinker 1s linear infinite; }
 @keyframes blinker { 50% { opacity: 0; } }
+
+/* 覆盤靜止模式：關閉動畫，保證畫面 100% 穩定不閃爍 */
+body.review-mode .scan-line { display: none !important; }
+body.review-mode .blink { animation: none !important; opacity: 1 !important; }
