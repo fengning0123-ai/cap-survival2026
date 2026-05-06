@@ -5,7 +5,7 @@ window.updateStat = updateStat;
 window.startDungeon = startDungeon;
 window.showReview = showReview;
 
-// 計分系統
+// 計分系統：A有6分, B有4分 / A++有7積點...依此類推
 const gradesData = [
     { level: "C", pts: 2, gp: 1 },
     { level: "B", pts: 4, gp: 2 },
@@ -41,7 +41,7 @@ function startGame() {
 }
 
 function resetGame() {
-    apPoints = 15;
+    apPoints = 15; 
     playerStats = { "國文": 0, "數學": 0, "英文": 0, "社會": 0, "自然": 0 };
     battleHistory = [];
     isVictory = false;
@@ -50,7 +50,7 @@ function resetGame() {
     document.getElementById('boss-image-container').classList.add('hidden');
     document.getElementById('boss-image').src = "";
     
-    document.getElementById('battle-title').innerText = "⚠ 檢測到魔王氣息 ⚠";
+    document.getElementById('battle-title').innerText = "⚠ 檢測到👾氣息 ⚠";
     document.getElementById('battle-title').classList.remove('text-sys-blue', 'drop-shadow-[0_0_8px_#45f3ff]');
     document.getElementById('battle-title').classList.add('text-sys-red');
     
@@ -88,7 +88,7 @@ function updateStat(subject, change) {
     renderStats();
 }
 
-// 核心比序引擎
+// 核心比序：戰鬥中極簡化顯示為 🗡️ 與 👾
 function evaluateBattle(pStats, bGrades) {
     let pPts = getPts(pStats); 
     let bPts = subjects.reduce((sum, s) => sum + getPtsFromLevel(bGrades[s]), 0);
@@ -97,51 +97,48 @@ function evaluateBattle(pStats, bGrades) {
 
     let logHTML = `<div class="mt-2 space-y-2 text-lg md:text-xl text-gray-300">`;
 
-    if (pPts > bPts) return { pass: true, decideKey: 'totalPts', detail: logHTML + `✅ 【總分】獵人 ${pPts}分 > 魔王 ${bPts}分 (獲勝)</div>` };
-    if (pPts < bPts) return { pass: false, decideKey: 'totalPts', detail: logHTML + `❌ 【總分】獵人 ${pPts}分 < 魔王 ${bPts}分 (敗北)</div>` };
+    if (pPts > bPts) return { pass: true, decideKey: 'totalPts', detail: logHTML + `✅ 【總分】🗡️ ${pPts}分 > 👾 ${bPts}分 (獲勝)</div>` };
+    if (pPts < bPts) return { pass: false, decideKey: 'totalPts', detail: logHTML + `❌ 【總分】🗡️ ${pPts}分 < 👾 ${bPts}分 (敗北)</div>` };
     logHTML += `<div>⚠️ 【總分】皆為 ${pPts}分 (平手) ➔ 比較總積點</div>`;
 
-    if (pGp > bGp) return { pass: true, decideKey: 'totalGp', detail: logHTML + `✅ 【總積點】獵人 ${pGp}點 > 魔王 ${bGp}點 (獲勝)</div>` };
-    if (pGp < bGp) return { pass: false, decideKey: 'totalGp', detail: logHTML + `❌ 【總積點】獵人 ${pGp}點 < 魔王 ${bGp}點 (敗北)</div>` };
+    if (pGp > bGp) return { pass: true, decideKey: 'totalGp', detail: logHTML + `✅ 【總積點】🗡️ ${pGp}點 > 👾 ${bGp}點 (獲勝)</div>` };
+    if (pGp < bGp) return { pass: false, decideKey: 'totalGp', detail: logHTML + `❌ 【總積點】🗡️ ${pGp}點 < 👾 ${bGp}點 (敗北)</div>` };
     logHTML += `<div>⚠️ 【總積點】皆為 ${pGp}點 (平手) ➔ 啟動單科順序</div>`;
 
     logHTML += `<div class="border-t border-gray-600 my-2 pt-2 text-yellow-300">⚔️ 單科積點嚴格對決 (國>數>英>社>自)：</div>`;
     for(let sub of subjects) {
         let pSubGp = gradesData[pStats[sub]].gp;
         let bSubGp = getGpFromLevel(bGrades[sub]);
-        if (pSubGp > bSubGp) return { pass: true, decideKey: sub, detail: logHTML + `✅ 【${sub}】獵人 ${pSubGp}點 > 魔王 ${bSubGp}點 (獲勝)</div>` };
-        if (pSubGp < bSubGp) return { pass: false, decideKey: sub, detail: logHTML + `❌ 【${sub}】獵人 ${pSubGp}點 < 魔王 ${bSubGp}點 (敗北)</div>` };
+        if (pSubGp > bSubGp) return { pass: true, decideKey: sub, detail: logHTML + `✅ 【${sub}】🗡️ ${pSubGp}點 > 👾 ${bSubGp}點 (獲勝)</div>` };
+        if (pSubGp < bSubGp) return { pass: false, decideKey: sub, detail: logHTML + `❌ 【${sub}】🗡️ ${pSubGp}點 < 👾 ${bSubGp}點 (敗北)</div>` };
         logHTML += `<div>🔹 【${sub}】${pSubGp}點 == ${bSubGp}點 (平手)</div>`;
     }
     
-    return { pass: false, decideKey: 'allTied', detail: logHTML + `<div class="text-red-400 font-bold mt-2">💀 五科完全平手！未大於魔王，系統判定敗北！</div></div>` };
+    return { pass: false, decideKey: 'allTied', detail: logHTML + `<div class="text-red-400 font-bold mt-2">💀 五科完全平手！未大於👾，系統判定敗北！</div></div>` };
 }
 
-// 完美設定的三大魔王 (強烈凸顯 3A2B 策略)
 const bosses = [
     { 
         name: "【E級 巨石神像】", 
         imgSrc: "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/boss-1.jpg?raw=true",
         desc: "「連基本分數都沒有，休想跨過這扇門！」",
         bossGrades: { "國文": "B++", "數學": "B++", "英文": "B++", "社會": "B++", "自然": "B++" }, 
-        reqDesc: "總分須大於魔王 (魔王：5B++ / 20分)",
-        failMsg: "總分不足，遭到秒殺！\n💡 提示：A有6分、B有4分。先把C拉到B，爭取『大分』最重要！"
+        reqDesc: "總分須大於👾<br>(👾：5B++ / 20分 / 20積點)"
     },
     { 
         name: "【A級 血色騎士】", 
         imgSrc: "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/boss-2.jpg?raw=true",
         desc: "「總分達標了？那來比比誰的細節更強。」",
-        bossGrades: { "國文": "A", "數學": "A", "英文": "B", "社會": "B", "自然": "A" }, // 3A2B，26分，19積點 (無+號)
-        reqDesc: "同總分下，總積點須大於魔王 (魔王：3A2B / 26分 / 19積點)",
-        failMsg: "總分或積點不足，被護甲反彈！\n💡 提示：必須配出『3A 2B』才能在總分抗衡，並用剩下的點數拿 + 號！"
+        bossGrades: { "國文": "A", "數學": "A", "英文": "A", "社會": "B", "自然": "B" }, 
+        reqDesc: "同總分下，總積點須大於👾<br>(👾：3A2B / 26分 / 19積點)"
     },
     { 
         name: "【S級 闇影蟻王】", 
         imgSrc: "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/boss-3.jpg?raw=true",
         desc: "「同分同積點...啟動桃連區單科比序法則！」",
-        bossGrades: { "國文": "A", "數學": "B", "英文": "A", "社會": "A", "自然": "B+" }, // 3A 1B 1B+，26分，20積點
-        reqDesc: "同分同積點，單科積點須大於魔王 (魔王：26分 / 20積點)",
-        failMsg: "在單科比序中敗北！\n💡 提示：總分與積點相同時，『國文』與『數學』是決定勝負的關鍵！"
+        // 修正第三關成績為 ABAAB+ (國文A、數學B、英文A、社會A、自然B+)
+        bossGrades: { "國文": "A", "數學": "B", "英文": "A", "社會": "A", "自然": "B+" }, 
+        reqDesc: "同分同積點，單科積點須大於👾<br>(👾：3A 1B+ 1B / 26分 / 20積點)"
     }
 ];
 
@@ -159,7 +156,7 @@ async function startDungeon() {
     imgContainer.classList.add('hidden');
     bossImg.src = "";
     
-    logBox.innerHTML = `<div class='text-sys-blue mb-3'>[系統] 正在為獵人 ${playerName} 建立地下城連結...</div>`;
+    logBox.innerHTML = `<div class='text-sys-blue mb-3'>[系統] 正在為🗡️ ${playerName} 建立地下城連結...</div>`;
     await delay(1000);
 
     for (let i = 0; i < bosses.length; i++) {
@@ -167,7 +164,7 @@ async function startDungeon() {
         bossImg.src = boss.imgSrc; 
         imgContainer.classList.remove('hidden');
         
-        logBox.innerHTML += `<div class='text-sys-red mt-5 text-xl md:text-3xl font-black'>➤ 獵人 ${playerName} 遭遇 ${boss.name}</div>`;
+        logBox.innerHTML += `<div class='text-sys-red mt-5 text-xl md:text-3xl font-black'>➤ 🗡️ ${playerName} 遭遇 ${boss.name}</div>`;
         logBox.innerHTML += `<div class='text-yellow-200 italic mb-2'>${boss.desc}</div>`;
         logBox.scrollTop = logBox.scrollHeight;
         await delay(1500);
@@ -175,8 +172,8 @@ async function startDungeon() {
         let bossGradeStr = subjects.map(s => `${s}${boss.bossGrades[s]}`).join(" ");
         let playerGradeStr = subjects.map(s => `${s}${gradesData[playerStats[s]].level}`).join(" ");
 
-        logBox.innerHTML += `<div class='text-purple-300 text-lg md:text-2xl font-bold mt-3 bg-gray-800 p-2 rounded-t-lg border-b border-gray-600'>🩻 魔王：${bossGradeStr}</div>`;
-        logBox.innerHTML += `<div class='text-yellow-300 text-lg md:text-2xl font-bold mb-3 bg-gray-800 p-2 rounded-b-lg'>🗡️ 獵人：${playerGradeStr}</div>`;
+        logBox.innerHTML += `<div class='text-purple-300 text-lg md:text-2xl font-bold mt-3 bg-gray-800 p-2 rounded-t-lg border-b border-gray-600'>👾：${bossGradeStr}</div>`;
+        logBox.innerHTML += `<div class='text-yellow-300 text-lg md:text-2xl font-bold mb-3 bg-gray-800 p-2 rounded-b-lg'>🗡️：${playerGradeStr}</div>`;
         logBox.scrollTop = logBox.scrollHeight;
         await delay(1500);
 
@@ -198,8 +195,7 @@ async function startDungeon() {
             bossImg.src = "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/defeat.jpg?raw=true";
             
             logBox.innerHTML += `<div class='mt-2'>${result.detail}</div>`;
-            logBox.innerHTML += `<div class='text-yellow-400 mt-3 whitespace-pre-line text-lg md:text-xl'>${boss.failMsg}</div>`;
-            logBox.innerHTML += `<div class='text-gray-500 mt-6 font-bold'>[系統] 獵人 ${playerName} 挑戰失敗。</div>`;
+            logBox.innerHTML += `<div class='text-gray-500 mt-6 font-bold'>[系統] 🗡️ ${playerName} 挑戰失敗。</div>`;
             logBox.scrollTop = logBox.scrollHeight;
             
             document.getElementById('battle-btn-restart').classList.remove('hidden');
@@ -216,7 +212,9 @@ async function startDungeon() {
     document.getElementById('battle-title').classList.remove('text-sys-red');
     document.getElementById('battle-title').classList.add('text-sys-blue', 'drop-shadow-[0_0_8px_#45f3ff]');
     bossImg.src = "https://github.com/fengning0123-ai/cap-survival2026/blob/main/image/victory.jpg?raw=true"; 
-    logBox.innerHTML += `<div class='text-sys-blue font-black text-2xl md:text-4xl mt-6 blink drop-shadow-[0_0_5px_#45f3ff]'>[系統] 恭喜獵人 ${playerName}！全數通關！</div>`;
+    
+    logBox.innerHTML += `<div class='text-sys-blue font-black text-[4.5vw] sm:text-2xl md:text-4xl mt-6 blink drop-shadow-[0_0_5px_#45f3ff] whitespace-nowrap tracking-tighter sm:tracking-normal text-center'>[系統] 恭喜🗡️ ${playerName}！全數通關！</div>`;
+    
     logBox.scrollTop = logBox.scrollHeight;
     
     document.getElementById('battle-btn-restart').classList.add('hidden');
@@ -224,14 +222,13 @@ async function startDungeon() {
     document.getElementById('end-buttons').classList.add('flex');
 }
 
-// 輔助函數：精準發光控制 (僅決勝點亮起)
 function formatResult(isDeciding, text, isWin) {
     if (isDeciding) {
         return isWin 
             ? `<span class="text-green-400 drop-shadow-[0_0_5px_#4ade80] font-black tracking-widest text-lg md:text-xl">✅ ${text}</span>` 
             : `<span class="text-red-400 drop-shadow-[0_0_5px_#f87171] font-black tracking-widest text-lg md:text-xl">❌ ${text}</span>`;
     } else {
-        return `<span class="text-gray-600 font-bold opacity-60">${text}</span>`;
+        return `<span class="text-gray-600 font-bold opacity-70">${text}</span>`;
     }
 }
 
@@ -244,10 +241,11 @@ function showReview() {
     if (isVictory) {
         document.getElementById('btn-review-restart').classList.add('hidden');
         html += `
-            <div class="bg-gradient-to-br from-yellow-700 via-yellow-600 to-yellow-800 border-4 border-yellow-400 p-6 md:p-8 rounded-xl shadow-[0_0_20px_#facc15] mb-8 text-center">
-                <h2 class="text-3xl md:text-5xl font-black text-yellow-100 drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] mb-6">🏆 桃連區地下城 破關證明 🏆</h2>
-                <p class="text-xl md:text-2xl text-white font-bold mb-8 tracking-wider">茲證明獵人 <span class="text-sys-blue text-3xl md:text-5xl px-3 drop-shadow-[0_0_10px_#45f3ff] bg-black bg-opacity-50 rounded-lg py-1">${playerName}</span></p>
-                <p class="text-lg md:text-2xl text-yellow-100 font-bold bg-black bg-opacity-30 p-4 rounded-lg inline-block border border-yellow-500">以卓越的戰略，成功突破所有比序防線<br><span class="text-2xl md:text-3xl text-yellow-300 mt-2 block">榮獲【 S級 升學獵人 】稱號！</span></p>
+            <div class="bg-gradient-to-br from-yellow-700 via-yellow-600 to-yellow-800 border-4 border-yellow-400 p-6 md:p-8 rounded-xl shadow-[0_0_20px_#facc15] mb-8 text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);"></div>
+                <h2 class="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-black text-yellow-100 drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] mb-6 whitespace-nowrap tracking-tighter sm:tracking-normal relative z-10">🏆 桃連區地下城 破關證明 🏆</h2>
+                <p class="text-xl md:text-2xl text-white font-bold relative z-10 mb-8 tracking-wider">茲證明🗡️獵人 <span class="text-sys-blue text-3xl md:text-5xl px-3 drop-shadow-[0_0_10px_#45f3ff] bg-black bg-opacity-50 rounded-lg py-1">${playerName}</span></p>
+                <p class="text-lg md:text-2xl text-yellow-100 font-bold relative z-10 bg-black bg-opacity-30 p-4 rounded-lg inline-block border border-yellow-500">以卓越的戰略，成功突破所有比序防線<br><span class="text-2xl md:text-3xl text-yellow-300 mt-2 block">榮獲<span class="text-yellow-400 font-black drop-shadow-[0_0_8px_#facc15]">【桃連區最佳獵人】</span>稱號！</span></p>
             </div>
         `;
     } else {
@@ -268,23 +266,25 @@ function showReview() {
 
         html += `
             <div class="border-l-8 ${statusClass} p-4 md:p-6 rounded-r-xl shadow-lg mb-8">
-                <div class="font-black text-2xl md:text-3xl mb-4 ${statusTitleClass}">${record.bossName} <span class="float-right text-xl md:text-2xl bg-black px-3 py-1 rounded border border-gray-700">${statusText}</span></div>
-                <div class="text-lg md:text-xl text-gray-300 mb-4 font-bold border-b border-gray-600 pb-2 tracking-wide">⚖️ ${record.reqDesc}</div>
+                <div class="font-black text-2xl md:text-3xl mb-4 ${statusTitleClass}">👾魔王 ${record.bossName} <span class="float-right text-xl md:text-2xl bg-black px-3 py-1 rounded border border-gray-700">${statusText}</span></div>
+                
+                <div class="text-lg md:text-xl text-gray-400 mb-4 font-bold border-b border-gray-600 pb-2 tracking-wide leading-relaxed text-center">
+                    ⚖️ ${record.reqDesc}
+                </div>
                 
                 <div class="overflow-x-auto">
                     <table class="w-full text-center border-collapse border-2 border-sys-blue bg-[#0d1321] rounded-lg text-base md:text-xl shadow-[0_0_15px_rgba(69,243,255,0.2)]">
                         <thead>
                             <tr class="bg-[rgba(69,243,255,0.15)] text-sys-blue font-black tracking-widest border-b-2 border-sys-blue">
                                 <th class="border border-sys-blue/50 p-3 w-1/4">比較項目</th>
-                                <th class="border border-sys-blue/50 p-3 w-1/4 text-purple-300">🩻 魔王</th>
-                                <th class="border border-sys-blue/50 p-3 w-1/4 text-yellow-300">🗡️ 獵人</th>
+                                <th class="border border-sys-blue/50 p-3 w-1/4 text-purple-300">👾魔王</th>
+                                <th class="border border-sys-blue/50 p-3 w-1/4 text-yellow-300">🗡️獵人</th>
                                 <th class="border border-sys-blue/50 p-3 w-1/4">小計判斷</th>
                             </tr>
                         </thead>
                         <tbody class="text-white font-bold tracking-wide">
         `;
         
-        // 總分欄位判定發光
         let ptsText = pPts > bPts ? '勝出' : (pPts < bPts ? '敗北' : '平手');
         let ptsHTML = formatResult(record.decideKey === 'totalPts', ptsText, pPts > bPts);
         
@@ -297,7 +297,6 @@ function showReview() {
                             </tr>
         `;
 
-        // 總積點欄位判定發光
         let gpText = pGp > bGp ? '勝出' : (pGp < bGp ? '敗北' : '平手');
         let gpHTML = formatResult(record.decideKey === 'totalGp', gpText, pGp > bGp);
         
@@ -310,7 +309,6 @@ function showReview() {
                             </tr>
         `;
         
-        // 單科比序欄位判定發光
         subjects.forEach(sub => {
             let bLvl = record.bossGrades[sub];
             let pLvl = gradesData[record.playerStats[sub]].level;
