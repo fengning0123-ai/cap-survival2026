@@ -22,7 +22,7 @@
                 },
                 colors: {
                     'sys-dark': '#0b0c10',
-                    'sys-panel': 'rgba(17, 24, 39, 0.90)',
+                    'sys-panel': 'rgba(17, 24, 39, 0.95)', /* 稍微調深背景，讓全螢幕更有質感 */
                     'sys-blue': '#45f3ff',
                     'sys-red': '#ff2a2a',
                 },
@@ -37,11 +37,11 @@
 
 <div id="scan-line-fx" class="scan-line pointer-events-none z-50"></div>
 
-<!-- 遊戲主容器 -->
-<div id="game-container" class="w-11/12 max-w-2xl bg-sys-panel border-4 border-sys-blue rounded-xl shadow-neon p-6 md:p-10 relative z-10 transition-all duration-500">
+<!-- 遊戲主容器：手機版滿版 (w-full, min-h-screen, 無邊框)，電腦版維持彈出視窗 -->
+<div id="game-container" class="w-full min-h-screen md:min-h-fit md:w-11/12 max-w-2xl bg-sys-panel border-0 md:border-4 border-sys-blue rounded-none md:rounded-xl shadow-none md:shadow-neon p-5 sm:p-8 md:p-10 pt-10 relative z-10 transition-all duration-500">
     
     <!-- 畫面 1：系統覺醒 -->
-    <div id="screen-intro" class="block text-center transition-opacity duration-500">
+    <div id="screen-intro" class="block text-center transition-opacity duration-500 mt-4 md:mt-0">
         <h1 class="text-sys-blue font-system text-3xl md:text-5xl font-black border-b-2 border-sys-blue pb-4 mb-6 drop-shadow-[0_0_8px_#45f3ff]">【系統提示】</h1>
         <p class="mb-4 text-xl md:text-3xl text-gray-100 font-bold tracking-wider">您已獲得玩家資格。</p>
         <p class="mb-6 text-lg md:text-2xl text-yellow-400 font-bold">任務：突破【桃連區升學地下城】</p>
@@ -57,7 +57,7 @@
         </button>
     </div>
 
-    <!-- 畫面 2：狀態配置 -->
+    <!-- 畫面 2：狀態配置視窗 -->
     <div id="screen-stats" class="hidden text-center transition-opacity duration-500">
         <h2 class="text-sys-blue font-system text-2xl md:text-4xl font-black mb-4 drop-shadow-[0_0_5px_#45f3ff]">STATUS WINDOW</h2>
         <p class="mb-6 text-xl md:text-3xl text-gray-100 font-bold bg-gray-800 p-3 rounded-lg border border-sys-blue inline-block shadow-neon">
@@ -65,7 +65,7 @@
         </p>
         
         <div id="stats-container" class="space-y-4 text-left mb-8 text-gray-100">
-            <!-- JS 動態生成配點介面 -->
+            <!-- JS 動態生成 -->
         </div>
 
         <button onclick="startDungeon()" id="btn-enter" class="w-full py-4 md:py-6 text-xl md:text-3xl border-4 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 font-black rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(69,243,255,0.4)]">
@@ -75,7 +75,7 @@
 
     <!-- 畫面 3：戰鬥結算 -->
     <div id="screen-battle" class="hidden transition-opacity duration-500">
-        <h2 id="battle-title" class="text-sys-red font-system text-2xl md:text-4xl font-black mb-6 text-center drop-shadow-[0_0_8px_#ff2a2a] blink">⚠ 檢測到魔王氣息 ⚠</h2>
+        <h2 id="battle-title" class="text-sys-red font-system text-2xl md:text-4xl font-black mb-6 text-center drop-shadow-[0_0_8px_#ff2a2a] blink">⚠ 檢測到👾氣息 ⚠</h2>
         
         <div id="boss-image-container" class="mb-6 hidden">
             <img id="boss-image" src="" alt="Boss" class="w-full h-56 md:h-80 object-cover rounded-lg border-2 border-gray-500 shadow-lg">
@@ -95,15 +95,16 @@
         </div>
     </div>
 
-    <!-- 畫面 4：覆盤分析 -->
+    <!-- 畫面 4：覆盤分析畫面 -->
     <div id="screen-review" class="hidden transition-opacity duration-500">
         <h2 class="text-yellow-400 font-system text-3xl md:text-5xl font-black mb-6 text-center drop-shadow-[0_0_8px_#facc15]">【戰報覆盤分析】</h2>
         
-        <div id="review-content" class="h-auto max-h-[45rem] overflow-y-auto no-scrollbar mb-6 p-2 space-y-6">
+        <!-- 手機版解除 max-height 限制，改用原生網頁捲動，避免雙捲軸卡頓 -->
+        <div id="review-content" class="h-auto max-h-none md:max-h-[45rem] overflow-y-auto no-scrollbar mb-6 p-1 md:p-2 space-y-6">
             <!-- JS 動態生成覆盤內容 -->
         </div>
 
-        <button id="btn-review-restart" onclick="resetGame()" class="w-full py-4 md:py-6 border-2 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 text-2xl md:text-3xl font-black rounded-lg hidden">
+        <button id="btn-review-restart" onclick="resetGame()" class="w-full py-4 md:py-6 border-2 border-sys-blue text-sys-blue hover:bg-sys-blue hover:text-sys-dark transition-all duration-300 text-2xl md:text-3xl font-black rounded-lg hidden mt-4">
             🔄 重新配置點數 (再戰)
         </button>
     </div>
