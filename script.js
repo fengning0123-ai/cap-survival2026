@@ -243,7 +243,7 @@ function showReview() {
         html += `
             <div class="bg-gradient-to-br from-yellow-700 via-yellow-600 to-yellow-800 border-4 border-yellow-400 p-6 md:p-8 rounded-xl shadow-[0_0_20px_#facc15] mb-8 text-center relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);"></div>
-                <h2 class="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-black text-yellow-100 drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] mb-6 whitespace-nowrap tracking-tighter sm:tracking-normal relative z-10">🏆 桃連區地下城 破關證明 🏆</h2>
+                <h2 class="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-black text-yellow-100 drop-shadow-[0_3px_5px_rgba(0,0,0,0.8)] mb-6 whitespace-nowrap tracking-tighter sm:tracking-normal relative z-10">🏆桃連區地下城破關證明🏆</h2>
                 <p class="text-xl md:text-2xl text-white font-bold relative z-10 mb-8 tracking-wider">茲證明🗡️獵人 <span class="text-sys-blue text-3xl md:text-5xl px-3 drop-shadow-[0_0_10px_#45f3ff] bg-black bg-opacity-50 rounded-lg py-1">${playerName}</span></p>
                 <p class="text-lg md:text-2xl text-yellow-100 font-bold relative z-10 bg-black bg-opacity-30 p-4 rounded-lg inline-block border border-yellow-500">以卓越的戰略，成功突破所有比序防線<br><span class="text-2xl md:text-3xl text-yellow-300 mt-2 block">榮獲<span class="text-yellow-400 font-black drop-shadow-[0_0_8px_#facc15]">【桃連區最佳獵人】</span>稱號！</span></p>
             </div>
